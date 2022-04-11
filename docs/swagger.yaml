@@ -1,0 +1,634 @@
+basePath: /
+definitions:
+  category_api.CategoryGetAllByPaginationRequest:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+    type: object
+  helper.Pages:
+    properties:
+      items: {}
+      limit:
+        type: integer
+      page:
+        type: integer
+    type: object
+  product_api.DeleteRequest:
+    properties:
+      id:
+        type: integer
+    type: object
+  product_api.ProductGetAllByPaginationRequest:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+    type: object
+  product_api.ProductRequest:
+    properties:
+      brand:
+        type: string
+      categoryId:
+        type: integer
+      name:
+        type: string
+    type: object
+  product_api.SearchRequest:
+    properties:
+      value:
+        type: string
+    type: object
+  product_api.UpdateRequest:
+    properties:
+      brand:
+        type: string
+      categoryId:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  shopping_api.CancelOrderRequest:
+    properties:
+      orderId:
+        type: integer
+    type: object
+  shopping_api.CartRequest:
+    properties:
+      productId:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  user_api.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Basket service api provides category-product-order.
+  title: Gin Basket Service API main
+  version: "1.0"
+paths:
+  /category/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: pagination
+        in: body
+        name: paginationRequest
+        schema:
+          $ref: '#/definitions/category_api.CategoryGetAllByPaginationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/helper.Pages'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Gets all categories with paginated result
+      tags:
+      - Category
+  /category/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category CSV File
+        in: formData
+        name: categoryCsv
+        required: true
+        type: file
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Add category by CSV file
+      tags:
+      - Category
+  /order/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Create Order
+      tags:
+      - Order
+  /order/cancel:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Order Id
+        in: body
+        name: cancelOrderRequest
+        schema:
+          $ref: '#/definitions/shopping_api.CancelOrderRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Cancel Order
+      tags:
+      - Order
+  /order/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Order
+      tags:
+      - Order
+  /product/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: pagination
+        in: body
+        name: paginationRequest
+        schema:
+          $ref: '#/definitions/product_api.ProductGetAllByPaginationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/helper.Pages'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Gets all products with paginated result
+      tags:
+      - Product
+  /product/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Info
+        in: body
+        name: productRequest
+        schema:
+          $ref: '#/definitions/product_api.ProductRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Add product
+      tags:
+      - Product
+  /product/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Id
+        in: body
+        name: deleteRequest
+        schema:
+          $ref: '#/definitions/product_api.DeleteRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Delete product
+      tags:
+      - Product
+  /product/search:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Search Value
+        in: body
+        name: searchRequest
+        schema:
+          $ref: '#/definitions/product_api.SearchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Gets searched products
+      tags:
+      - Product
+  /product/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Products Update Values
+        in: body
+        name: updateRequest
+        schema:
+          $ref: '#/definitions/product_api.UpdateRequest'
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Update product
+      tags:
+      - Product
+  /shopping/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Cart Items
+        in: body
+        name: cartRequest
+        schema:
+          items:
+            $ref: '#/definitions/shopping_api.CartRequest'
+          type: array
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Add cart
+      tags:
+      - Cart
+  /shopping/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Delete Cart Items
+        in: body
+        name: cartRequest
+        schema:
+          items:
+            $ref: '#/definitions/shopping_api.CartRequest'
+          type: array
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Delete item to cart
+      tags:
+      - Cart
+  /shopping/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get cart
+      tags:
+      - Cart
+  /user/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Info
+        in: body
+        name: loginRequest
+        schema:
+          $ref: '#/definitions/user_api.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add user
+      tags:
+      - User
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Info
+        in: body
+        name: loginRequest
+        schema:
+          $ref: '#/definitions/user_api.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - User
+schemes:
+- http
+swagger: "2.0"

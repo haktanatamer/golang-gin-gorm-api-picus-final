@@ -1,0 +1,10 @@
+database:
+  dbname: "basket_api"
+  username: "root"
+  password: "1575"
+  host: "127.0.0.1:3306"
+  testdbname: "basket_api_test"
+
+server:
+  port: ":8080"
+  secret: "mySecretTokenKey"
